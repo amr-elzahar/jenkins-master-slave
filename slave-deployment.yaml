@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-slave
+  namespace: jenkins
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins-slave
+  template:
+    metadata:
+      labels:
+        app: jenkins-slave
+    spec:
+      securityContext:
+        fsGroup: 0
+        runAsGroup: 0
+        runAsUser: 0
+      containers:
+        - name: jenkins-slave
+          image: amrelzahar/jenkins-slave:latest
+          resources: {}
+          ports:
+            - name: ssh-port
+              containerPort: 22
+            - name: jnlp-port
+              containerPort: 50000
+          volumeMounts:
+            - mountPath: /var/run/docker.sock
+              name: docker-sock
+      volumes:
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
