@@ -13,6 +13,7 @@ spec:
       labels:
         app: jenkins-slave
     spec:
+      serviceAccountName: jenkins-slave
       securityContext:
         fsGroup: 0
         runAsGroup: 0
@@ -29,7 +30,13 @@ spec:
           volumeMounts:
             - mountPath: /var/run/docker.sock
               name: docker-sock
+            # - name: kubeconfig
+            #   mountPath: /home/jenkins/.kube
+            #   readOnly: true
       volumes:
         - name: docker-sock
           hostPath:
             path: /var/run/docker.sock
+        # - name: kubeconfig
+        #   secret:
+        #     secretName: jenkins-slave-kubeconfig
